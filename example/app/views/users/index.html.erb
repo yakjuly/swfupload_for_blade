@@ -1,0 +1,15 @@
+<%= link_to "new", new_user_path %>
+<table>
+  <tr>
+    <th>name</th>
+    <th>Attachment</th>
+    <th>oper</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to user.name, edit_user_path(user) %></td>
+      <td><%= attach_link_of(user) %></td>
+      <td><%= link_to "destroy", user_path(user), :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>

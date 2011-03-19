@@ -1,0 +1,3 @@
+example/public/system
+example/public/system/**/*
+*.gem

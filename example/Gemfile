@@ -4,3 +4,5 @@ gem 'rails', '3.0.3'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'swfupload_for_blade'
+gem 'paperclip'
+gem 'mime-types', '1.16', :require => 'mime/types'

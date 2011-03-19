@@ -1,5 +1,4 @@
 class AttachmentsController < ApplicationController
-  before_filter :login_required
   before_filter :find_attachable, :only => [:create, :destroy]
   
   def create

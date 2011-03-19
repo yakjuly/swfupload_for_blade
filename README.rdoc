@@ -1,3 +1,33 @@
 = Swfupload For Blade
 
 Quickly Add file upload partment by use "ruby script/generate swfupload"
+swfupload.handlers.js need jquery for ajax request you can change it yourself.
+
+== install
+  gem install swfupload_for_blade
+
+== requirement
+
+  gem 'paperclip'
+  gem 'mime-types', '1.16', :require => 'mime/types'
+
+== Gemfile
+
+  gem 'paperclip'
+  gem 'mime-types', '1.16', :require => 'mime/types'
+
+== environment
+
+config/application.rb
+
+  config.autoload_paths += %W( #{config.root}/lib )
+  %w(middleware).each do |dir|
+    config.autoload_paths += %W( #{config.root}/app/#{dir} )
+  end
+
+add these to the last of file "config/initalizers/session_store.rb"
+  Rails.application.config.middleware.insert_before(
+    ActionDispatch::Session::CookieStore,
+    FlashSessionCookieMiddleware,
+    Rails.application.config.session_options[:key]
+  )

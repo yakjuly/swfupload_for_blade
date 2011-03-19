@@ -1,0 +1,3 @@
+= Swfupload For Blade
+
+Quickly Add file upload partment by use "ruby script/generate swfupload"

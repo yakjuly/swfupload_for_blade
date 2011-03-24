@@ -1,25 +1,28 @@
-<%- attachment = attachable.attachment -%>
+<%  attachment = attachable.attachment %>
 <div id="uploadContainer" class="uploadContainer">
+  <div style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;">
+    <%= tag :button, :id => "upload-button" -%>
+  </div>
   
-  <%- if attachment -%>
-    <div class="progressContainer blue flash">
-      <%= link_to "", attachment_path_of(attachable), :method=>:delete, :remote=>true, :class=>"progressCancel" -%>
-      <div class="progressName">
-        <%= link_to attachment.file.original_filename, attachment.file.url, :target => "_blank" -%>
+  <div id="fsUploadProgress" class="flash">
+    <% if attachment %>
+      <div class="progressWrapper" id="SWFUpload_<%= attachment.id %>">
+        <div class="progressContainer blue">
+          <%= link_to_function "&nbsp".html_safe, "$('#SWFUpload_#{attachment.id}').remove()", :class => "progressCancel" %>
+
+          <div class="progressName" id="attachment_<%= attachment.id %>">
+            <%= hidden_field_tag "#{attachable.class.to_s.downcase}[attachment_attributes][#{attachment.id}][id]", attachment.id %>
+            <%= link_to attachment.file.original_filename, attachment.file.url, :target => "_blank" -%>
+          </div>
+        </div>
       </div>
-    </div>
-    
-  <%- else -%>
-  
-    <div style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;">
-      <%= tag :button, :id => "upload-button" -%>
-    </div>
-    
-    <div id="fsUploadProgress" class="flash"></div>
-  <%- end -%>
+    <% end %>
+  </div>
+ 
+
 </div>
 
 <% content_for :head do %>
   <%= use_swfupload %>
-  <%= swfupload("upload-button", attachable) if attachment.blank? -%>
+  <%= swfupload("upload-button", attachable) -%>
 <% end %>

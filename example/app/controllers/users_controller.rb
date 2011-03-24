@@ -2,14 +2,29 @@ class UsersController < ApplicationController
   before_filter :prepare_user
   
   def new
-    render :edit
+    @user = User.new
+  end
+  
+  def create
+    @user = User.new(params[:user])
+    
+    if @user.save
+      redirect_to :action => :index
+    else
+      render :new
+    end
+  end
+  
+  def edit
+    
   end
   
   def update
     if @user.update_attributes(params[:user])
-      render :edit
-    else
       redirect_to :action => :index
+      
+    else
+      render :edit
     end
   end
   

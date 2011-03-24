@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110319075515) do
+ActiveRecord::Schema.define(:version => 20110324065012) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file_file_name",    :null => false
@@ -24,6 +24,12 @@ ActiveRecord::Schema.define(:version => 20110319075515) do
   end
 
   add_index "attachments", ["attachable_id", "attachable_type"], :name => "index_attachments_on_attachable_id_and_attachable_type"
+
+  create_table "comments", :force => true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"

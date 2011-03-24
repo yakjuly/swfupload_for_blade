@@ -1,4 +1,4 @@
 class User < ActiveRecord::Base
-  include Attachable
+  has_file
   
 end

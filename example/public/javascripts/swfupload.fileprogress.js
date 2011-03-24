@@ -67,10 +67,7 @@ FileProgress.prototype.setComplete = function () {
 	this.fileProgressElement.childNodes[3].className = "progressBarComplete";
 	this.fileProgressElement.childNodes[3].style.width = "";
 
-	var oSelf = this;
-	oSelf.showFile();
-	//added by blade
-	oSelf.hideUploadButton();
+	//var oSelf = this;
 	//setTimeout(function () {
 	//	oSelf.disappear();
 	//}, 5000);
@@ -112,23 +109,44 @@ FileProgress.prototype.toggleCancel = function (show, swfUploadInstance) {
 };
 
 //show file
-FileProgress.prototype.showFile = function () {
-	console.log(this.fileProgressElement.childNodes[1])
+FileProgress.prototype.showFile = function (settings) {
+	
+	var hidden_field = document.createElement("input");
+	hidden_field.type = "hidden";
+	
+	if (settings.hasOneAttachment) {
+		hidden_field.name = settings.attachable_type + "[attachment_attributes][id]";
+	} else {
+		hidden_field.name = settings.attachable_type + "[attachment_attributes][" + this.responseJSON.attachment_id+ "][id]";
+	}
+	
+	hidden_field.value = this.responseJSON.attachment_id;
+	
 	var link = document.createElement("a");
 	link.href = this.responseJSON.url;
 	link.target = "_blank";
 	link.innerHTML = this.fileProgressElement.childNodes[1].innerHTML;
+	
+	this.fileProgressElement.childNodes[1].id = "attachment_" + this.responseJSON.attachment_id;
 	this.fileProgressElement.childNodes[1].innerHTML = "";
+	this.fileProgressElement.childNodes[1].appendChild(hidden_field);
 	this.fileProgressElement.childNodes[1].appendChild(link);
+	
+	if (settings.hasOneAttachment) {
+		$("#fsUploadProgress .progressWrapper[id!=" + this.fileProgressID + "]").remove();
+	} else {
+		//go on upload
+	}
+	
+	this.changeCancelButton();
 }
 
 FileProgress.prototype.changeCancelButton = function () {
 	var oSelf = this;
 	this.fileProgressElement.childNodes[0].onclick = function() {
-		$.ajax({
-			url: "/attachments/" + oSelf.responseJSON.attachment_id + "?attachable_type="+ oSelf.responseJSON.attachable_type + "&attachable_id=" + oSelf.responseJSON.attachable_id,
-			type: "delete",
-		});
+		console.log("cancel")
+		console.log("#fsUploadProgress .progressWrapper[id=" + oSelf.fileProgressID + "]")
+		$("#fsUploadProgress .progressWrapper[id=" + oSelf.fileProgressID + "]").remove();
 	}
 }
 

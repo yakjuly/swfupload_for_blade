@@ -4,6 +4,7 @@ Example::Application.routes.draw do
   root :to => "users#index"
   resources :attachments
   resources :users
+  resources :comments
   
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'

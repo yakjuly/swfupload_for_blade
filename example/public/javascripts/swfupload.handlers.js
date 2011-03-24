@@ -107,8 +107,8 @@ function uploadSuccess(file, serverData) {
 		//added by blade
 		progress.responseJSON = JSON.parse(serverData);
 		progress.setComplete();
+		progress.showFile(this.customSettings)
 		progress.setStatus("完成.");
-		progress.changeCancelButton();
 		
 		//progress.toggleCancel(false);
 	} catch (ex) {

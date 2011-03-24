@@ -30,9 +30,7 @@ module Example
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     config.autoload_paths += %W( #{config.root}/lib )
-    %w(middleware).each do |dir|
-      config.autoload_paths += %W( #{config.root}/app/#{dir} )
-    end
+    config.autoload_paths += %W( #{config.root}/app/middleware )
     
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
@@ -44,3 +42,5 @@ module Example
     config.filter_parameters += [:password]
   end
 end
+
+require "attachable"

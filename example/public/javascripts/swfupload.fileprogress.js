@@ -113,14 +113,8 @@ FileProgress.prototype.showFile = function (settings) {
 	
 	var hidden_field = document.createElement("input");
 	hidden_field.type = "hidden";
-	
-	if (settings.hasOneAttachment) {
-		hidden_field.name = settings.attachable_type + "[attachment_attributes][id]";
-	} else {
-		hidden_field.name = settings.attachable_type + "[attachment_attributes][" + this.responseJSON.attachment_id+ "][id]";
-	}
-	
-	hidden_field.value = this.responseJSON.attachment_id;
+	hidden_field.name = settings.attachable_type + "[attachment_attributes][" + this.responseJSON.attachment_id+ "][create]";
+	hidden_field.value = "true";
 	
 	var link = document.createElement("a");
 	link.href = this.responseJSON.url;
@@ -132,8 +126,15 @@ FileProgress.prototype.showFile = function (settings) {
 	this.fileProgressElement.childNodes[1].appendChild(hidden_field);
 	this.fileProgressElement.childNodes[1].appendChild(link);
 	
+	console.log("hahaha");
+	console.log(settings);
+	
 	if (settings.hasOneAttachment) {
-		$("#fsUploadProgress .progressWrapper[id!=" + this.fileProgressID + "]").remove();
+		$("#fsUploadProgress .progressWrapper[id!=" + this.fileProgressID + "]").each(function(idx,item){
+			var attachment_id = $(item).find(".progressName").attr("id").replace("attachment_", "");
+			var hidden_delete_field = $("<input type='hidden' name='" + settings.attachable_type + "[attachment_attributes][" + attachment_id + "][delete]' value='true' />");
+			$(item).replaceWith(hidden_delete_field);
+		});
 	} else {
 		//go on upload
 	}
@@ -144,8 +145,6 @@ FileProgress.prototype.showFile = function (settings) {
 FileProgress.prototype.changeCancelButton = function () {
 	var oSelf = this;
 	this.fileProgressElement.childNodes[0].onclick = function() {
-		console.log("cancel")
-		console.log("#fsUploadProgress .progressWrapper[id=" + oSelf.fileProgressID + "]")
 		$("#fsUploadProgress .progressWrapper[id=" + oSelf.fileProgressID + "]").remove();
 	}
 }

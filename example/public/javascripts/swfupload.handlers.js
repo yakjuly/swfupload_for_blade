@@ -179,3 +179,8 @@ function queueComplete(numFilesUploaded) {
 	//var status = document.getElementById("divStatus");
 	//status.innerHTML = numFilesUploaded + " 文件被上传";
 }
+
+function removeAttachment(attachable_type, id) {
+	var remove_hidden_tag = $("<input type='hidden' name='" + attachable_type + "[attachment_attributes][" + id+ "][delete]' value ='true' />")
+	$("#SWFUpload_" + id).replaceWith(remove_hidden_tag)
+}

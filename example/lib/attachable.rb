@@ -25,13 +25,23 @@ module Attachable
     
     def attachment_attributes=( attrs )
       @attachment_attributes = attrs
+      @need_destroy_attachments = []
       
-      if self.respond_to?(:attachments)
-        attrs.each do |key, attr|
-          self.attachments << Attachment.find_by_id(attr["id"])
+      attrs.each do |id, action|
+        attach = Attachment.find_by_id(id)
+        if action["create"] == "true"
+          if self.respond_to?(:attachments)
+            unless self.attachments.include?(attach)
+              self.attachments << attach
+            end
+          else
+            unless self.attachment == attach
+              self.attachment = attach
+            end
+          end
+        elsif action["delete"] == "true"
+          @need_destroy_attachments << attach
         end
-      else
-        self.attachment = Attachment.find_by_id(attrs["id"])
       end
     end
     
@@ -40,15 +50,9 @@ module Attachable
     end
     
     def set_attachable
-      original_attachments = Attachment.attached_by(self)
-      
-      if self.respond_to?(:attachments)
-        need_destroy = original_attachments - self.attachments
-      else
-        need_destroy = original_attachments - [self.attachment]
+      if @need_destroy_attachments.present?
+        @need_destroy_attachments.each(&:destroy)
       end
-      
-      need_destroy.each(&:destroy)
     end
   end
   

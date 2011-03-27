@@ -8,7 +8,7 @@
   <% @users.each do |user| %>
     <tr>
       <td><%= link_to user.name, edit_user_path(user) %></td>
-      <td><%= attach_link_of(user) %></td>
+      <td><%= link_to_attachment(user.attachment) %></td>
       <td><%= link_to "destroy", user_path(user), :method => :delete %></td>
     </tr>
   <% end %>

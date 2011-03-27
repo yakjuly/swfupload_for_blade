@@ -31,3 +31,6 @@ add these to the last of file "config/initalizers/session_store.rb"
     FlashSessionCookieMiddleware,
     Rails.application.config.session_options[:key]
   )
+
+==Usage
+  <%= swfupload_of(attachable) %>

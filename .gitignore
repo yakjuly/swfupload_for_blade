@@ -1,3 +1,4 @@
 example/public/system
 example/public/system/**/*
+example/log
 *.gem

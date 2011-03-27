@@ -4,17 +4,13 @@ module AttachmentsHelper
     text << stylesheet_link_tag("swfupload.css")
   end
   
-  def swfupload(dom_id, attachable)
-    javascript_tag( %(var swfu; window.onload = function(){ #{swfupload_js(dom_id, attachable)} };) )
+  def swfupload(dom_id, attachable, options = {})
+    javascript_tag( %(var swfu; window.onload = function(){ #{swfupload_js(dom_id, attachable, options)} };) )
   end
   
-  def attachment_path_of(attachable)
-    attachment_path(attachable.attachment, :attachable_type=>attachable.class, :attachable_id=>attachable.id)
-  end
-
-  def attach_link_of(attachable)
-    return "" unless attachable.attachment 
-    link_to attachable.attachment.file.original_filename, attachable.attachment.file.url, :target => "_blank"
+  def link_to_attachment(attachment)
+    return "" if attachment.blank?
+    link_to attachment.file.original_filename, attachment.file.url, :target => "_blank"
   end
 
   def ext_img_of(attachment)
@@ -22,7 +18,8 @@ module AttachmentsHelper
   end
 
   def swfupload_js(dom_id, attachable, options = {})
-    url = options[:url] || attachments_path(:attachable_type => attachable.class, :attachable_id => attachable.id)
+    options[:exts] ||= []
+    url = options[:url] || attachments_path
     session_key = Rails.application.config.session_options[:key]
     url.add_query!(session_key => cookies[session_key], request_forgery_protection_token => form_authenticity_token)
     %(
@@ -34,12 +31,14 @@ module AttachmentsHelper
            "#{request_forgery_protection_token}"    : "#{u form_authenticity_token}"
    			},
    			file_size_limit : "100 MB",
-   			file_types : "*.*", //上传类型控制"*.zip;*.doc;*.ppt;"
+   			file_types : "#{ options[:exts].map{|ext| "*.#{ext}" }.join(";") || "*.*" }", //上传类型控制"*.zip;*.doc;*.ppt;"
    			file_types_description : "All Files",
    			file_upload_limit : 100,   //上传容量大小
-   			file_queue_limit : 1,     //上传数量
+   			file_queue_limit : #{options[:limit] || 1},     //上传数量
    			custom_settings : {
-   				progressTarget : "fsUploadProgress"
+   				progressTarget : "fsUploadProgress",
+   				hasOneAttachment: #{attachable.respond_to?(:attachment).to_s},
+   				attachable_type: "#{attachable.class.to_s.downcase}"
    			},
    			// Button settings
         button_image_url : "/images/selectFile_17x18.png",
@@ -67,8 +66,21 @@ module AttachmentsHelper
   end
 
   def swfupload_of(attachable)
-    render :partial => "/attachments/single_upload", :locals => {:attachable => attachable}
+    if attachable.respond_to?(:attachment)
+      render :partial => "/attachments/single_upload", :locals => {:attachable => attachable}
+    else
+      render :partial => "/attachments/muti_upload", :locals => {:attachable => attachable}
+    end
   end
+  
+  def link_to_remove_attachment(attachable, attachment)
+    link_to_function "&nbsp".html_safe, "removeAttachment('#{attachable.class.to_s.downcase}', #{attachment.id})", :class => "progressCancel"
+  end
+  
+  def create_attachment_hidden_tag(attachable, attachment)
+    hidden_field_tag "#{attachable.class.to_s.downcase}[attachment_attributes][#{attachment.id}][create]", "true"
+  end
+  
 end
 class String
   def add_query!(hash)

@@ -16,7 +16,8 @@ class SwfuploadGenerator < Rails::Generators::Base
   def generate_swfupload
     migration_template "migration.rb", "db/migrate/create_attachments.rb"
     
-    copy_file '_upload.html.erb',  "app/views/attachments/_single_upload.html.erb"
+    copy_file '_single_upload.html.erb',  "app/views/attachments/_single_upload.html.erb"
+    copy_file '_multi_upload.html.erb', "app/views/attachments/_multi_upload.html.erb"
     copy_file 'helper.rb',     "app/helpers/attachments_helper.rb"
     copy_file 'controller.rb', "app/controllers/attachments_controller.rb"
     copy_file 'model.rb', 'app/models/attachment.rb'

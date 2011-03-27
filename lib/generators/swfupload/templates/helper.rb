@@ -69,7 +69,7 @@ module AttachmentsHelper
     if attachable.respond_to?(:attachment)
       render :partial => "/attachments/single_upload", :locals => {:attachable => attachable}
     else
-      render :partial => "/attachments/muti_upload", :locals => {:attachable => attachable}
+      render :partial => "/attachments/multi_upload", :locals => {:attachable => attachable}
     end
   end
   
